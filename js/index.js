@@ -1,3 +1,25 @@
+// ---- Helper Functions -----
+
+// Fetching the API
+function fetchData(url){
+    return fetch(url)
+    .then(res => res.json())
+}
+
+// Function to call other functions
+function callAPI(url){
+    addImage(url);
+    addName(url);
+    addEmail(url);
+    addCityAndCountry(url);
+}
+
+function addHTML(htmlElement, htmlToAdd){
+    htmlElement.insertAdjacentHTML('afterbegin', htmlToAdd)
+}
+
+
+
 // Form Markup
 const searchContainer = document.querySelector('.search-container');
 const searchForm = `
@@ -40,54 +62,123 @@ const modalHTML = `
     <p class="modal-text">(555) 555-5555</p>
     <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
     <p class="modal-text">Birthday: 10/21/2015</p>
-</div>`
+</div>`;
+
 
 
 
 
 
 // Inserting HTML Into DOM
-searchContainer.insertAdjacentHTML('afterbegin', searchForm);
-gallery.insertAdjacentHTML('afterbegin', galleryHTML);
-modal.insertAdjacentHTML('afterbegin', modalHTML);
-// gallery.insertAdjacentElement("afterend", modal);
+addHTML(searchContainer, searchForm);
+addHTML(gallery, galleryHTML);
+addHTML(modal, modalHTML);
+
+
 
 
 // HTML Elements For Modal
 
 
+// Add Image to API
+function addImage(url){
+    fetchData(url)
+    .then(data => {
+        const galleryImg = document.querySelector('.card-img');
+        data.results.map(person => {
+            const image = person.picture.thumbnail;
+            galleryImg.src = image;
+        });
+    });
+}
 
-// Fetching the API
-function fetchData(url){
-    return fetch(url)
-    .then(res => res.json())
+
+// Add Name to API
+function addName(url){
+    fetchData(url)
+    .then(data => {
+        const nameElement = document.querySelector('#name');
+        data.results.map(person => {
+            const firstName = person.name.first;
+            const lastName = person.name.last;
+            nameElement.textContent = `${firstName} ${lastName}`;
+        });
+    });
+}
+
+function addEmail(url){
+    fetchData(url)
+    .then(data => {
+        const emailElement = document.querySelector('.card-text');
+        data.results.map(person => {
+            const email = person.email;
+            emailElement.textContent = email;
+        });
+    });
+}
+
+function addCityAndCountry(url){
+    fetchData(url)
+    .then(data => {
+        const cityAndCountry = document.querySelector('.card-text.cap');
+        data.results.map(person => {
+            const city = person.location.city;
+            const country = person.location.country;
+            cityAndCountry.textContent = `${city} ${country}`;
+        });
+    });
+
 }
 
 
 // Fecthing data and changing HTML
-fetchData('https://randomuser.me/api/?results=12')
-    .then(data => {
-        data.results.map(person => {
-            // HTML Elements For Modal
 
-            const galleryImg = document.querySelector('.card-img');
-            const nameElement = document.querySelector('#name');
-            const cityAndCountry = document.querySelector('.card-text.cap');
-            const emailElement = document.querySelector('.card-text');
+// function getUsers(){
+//     // HTML Elements For Modal
+//     const galleryImg = document.querySelector('.card-img');
+//     const nameElement = document.querySelector('#name');
+//     const cityAndCountry = document.querySelector('.card-text.cap');
+//     const emailElement = document.querySelector('.card-text');
 
-            // Info from API
-            const image = person.picture.thumbnail;
-            const firstName = person.name.first;
-            const lastName = person.name.last;
-            const city = person.location.city;
-            const country = person.location.country;
-            const email = person.email;
+//     fetchData('https://randomuser.me/api/?results=6')
+//     .then(data => {
+//         data.results.map(person => {
+//             // Info from API
+//             const image = person.picture.thumbnail;
+//             const firstName = person.name.first;
+//             const lastName = person.name.last;
+//             const city = person.location.city;
+//             const country = person.location.country;
+//             const email = person.email;
         
-            // Changing HTML 
-            galleryImg.src = image; 
-            nameElement.textContent = `${firstName} ${lastName}`;
-            emailElement.textContent = email;
-            cityAndCountry.textContent = `${city} ${country}`;
-            gallery.insertAdjacentHTML('afterbegin', galleryHTML);
-        });
+//             // Changing HTML 
+//             galleryImg.src = image; 
+//             nameElement.textContent = `${firstName} ${lastName}`;
+//             emailElement.textContent = email;
+//             cityAndCountry.textContent = `${city} ${country}`;
+//             gallery.insertAdjacentHTML('afterbegin', galleryHTML);
+//         });
+//         // const img = `<img class="card-img" src="${image}" alt="profile picture">`;
+//         //     const nameText = `<h3 id="name" class="card-name cap">${firstName} ${lastName}</h3>`;
+//         //     const emailText = `<p class="card-text">${email}</p>`;
+//         //     const cityText = `<p class="card-text cap">${city} ${country}</p>`;
+// });
+
+// }
+
+
+
+
+
+
+// Modal Window
+
+const cards = document.querySelector('.card');
+console.log(cards)
+cards.addEventListener('click', () => {
+    gallery.insertAdjacentElement("afterend", modal);
 });
+
+
+// Send request to the api
+callAPI('https://randomuser.me/api/?results=12');
