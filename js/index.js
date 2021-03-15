@@ -1,8 +1,6 @@
 // HTML elements
 const gallery = document.querySelector('#gallery');
 const searchContainer = document.querySelector('.search-container');
-const modal = document.createElement('div');
-modal.setAttribute('class', 'modal-container');
 
 
 
@@ -61,17 +59,19 @@ function getUsers(data) {
 function generateHTML(data){
     const html = data.results.map(person =>
     `
-    <div class="modal">
+    <div class="modal-container">
+        <div class="modal">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
         <div class="modal-info-container">
-        <img class="modal-img" src="${person.picture.thumbnail}" alt="profile picture">
-        <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
-        <p class="modal-text">${person.email}</p>
-        <p class="modal-text cap">${person.location.city} ${person.location.country}</p>
-        <hr>
-        <p class="modal-text">${person.cell}</p>
-        <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.country} ${person.location.state}, ${person.location.postcode}</p>
-        <p class="modal-text">Birthday: ${new Date(person.dob.date)}</p>
+                <img class="modal-img" src="${person.picture.thumbnail}" alt="profile picture">
+                <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
+                <p class="modal-text">${person.email}</p>
+                <p class="modal-text cap">${person.location.city} ${person.location.country}</p>
+                <hr>
+                <p class="modal-text">${person.cell}</p>
+                <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.country} ${person.location.state}, ${person.location.postcode}</p>
+                <p class="modal-text">Birthday: ${new Date(person.dob.date)}</p>
+        </div>
     </div>
     `)
     addHTMLToDOM(html)
@@ -81,28 +81,23 @@ function addHTMLToDOM(html){
     const cards = document.querySelectorAll('.card');
     let cardList = [...cards];
     
-    cardList.map(card => {
-        console.log( html)
+    cardList.map((card, i) => {
         card.addEventListener('click', () => {
-            gallery.insertAdjacentHTML("afterend", html);
-            // console.log(document.querySelector('#modal-close-btn'))
+            gallery.insertAdjacentHTML("afterbegin", html[i]);
             
+            // close button Event
+            const closeBtn = document.querySelector('#modal-close-btn');
         
-            // X button Event
-            // const closeBtn = document.querySelector('#modal-close-btn');
-            // const x = document.querySelector('strong');
-        
-            // closeBtn.addEventListener('click', (e) => {
-            // const modal = document.querySelector('.modal-container');
-            // console.log(e.target)
-            // if (e.target === closeBtn || e.target === x){
-            //     modal.style.display = 'none';
-            //     elementClicked = true;
-            // } else{
-            //     elementClicked = false;
-            //     modal.style.display === ''
-            // }
-            // });
+            closeBtn.addEventListener('click', (e) => {
+            const modal = document.querySelector('.modal-container');
+            const x = document.querySelector('strong');
+
+            if (e.target === closeBtn || e.target === x){
+                modal.style.display = 'none';
+            } else{
+                modal.style.display === ''
+            }
+            });
         });
     });
 }
