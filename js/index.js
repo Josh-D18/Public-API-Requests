@@ -22,20 +22,23 @@ const searchForm = `
 
 
 // Fetching the API
-
-// Gallery View
-fetch('https://randomuser.me/api/?results=12')
+function fetchData(url){
+    return fetch(url)
     .then(res => res.json())
-    .then(data => getUsers(data))
     .catch(err => new Error(`Something went Wrong: ${err}`, err));
+}
 
-// Modal View
-fetch('https://randomuser.me/api/?results=12')
-    .then(res => res.json())
-    .then(data => addmodalHTML(data))
+
+// Gallery and Modal View
+fetchData('https://randomuser.me/api/?results=12')
+    .then(data => {
+        getUsers(data)
+        generateHTML(data)
+    })
+
+
 
 //Gallery Markup
-
 function getUsers(data) { 
     const html = data.results.map(person =>  
         `<div class="card">
@@ -55,8 +58,7 @@ function getUsers(data) {
 
 // Modal Markup
 
-function addmodalHTML(data){
-    const cards = document.querySelectorAll('.card');
+function generateHTML(data){
     const html = data.results.map(person =>
     `
     <div class="modal">
@@ -69,15 +71,20 @@ function addmodalHTML(data){
         <hr>
         <p class="modal-text">${person.cell}</p>
         <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.country} ${person.location.state}, ${person.location.postcode}</p>
-        <p class="modal-text">Birthday: ${person.dob.date}</p>
+        <p class="modal-text">Birthday: ${new Date(person.dob.date)}</p>
     </div>
     `)
-    console.log(cards)
-    let cardList = [...cards];
+    addHTMLToDOM(html)
+} 
 
+function addHTMLToDOM(html){
+    const cards = document.querySelectorAll('.card');
+    let cardList = [...cards];
+    
     cardList.map(card => {
+        console.log( html)
         card.addEventListener('click', () => {
-            card.insertAdjacentHTML("afterend", html);
+            gallery.insertAdjacentHTML("afterend", html);
             // console.log(document.querySelector('#modal-close-btn'))
             
         
@@ -98,8 +105,7 @@ function addmodalHTML(data){
             // });
         });
     });
-} 
-
+}
 
 
 
