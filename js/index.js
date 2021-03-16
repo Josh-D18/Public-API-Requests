@@ -58,6 +58,8 @@ function getUsers(data) {
 
 // Modal Markup
 
+// Format date: https://dev.to/racztiborzoltan/javascript-format-date-as-yyyy-mm-dd-4ef3
+// .toISOString().slice(0, 10)
 function generateHTML(data){
     const html = data.results.map(person =>
     `
