@@ -3,12 +3,6 @@ const gallery = document.querySelector('#gallery');
 const searchContainer = document.querySelector('.search-container');
 
 
-
-// Inserting HTML Into DOM
-function addHTML(htmlElement, htmlToAdd){
-    htmlElement.insertAdjacentHTML('afterbegin', htmlToAdd)
-}
-
 // Form Markup
 const searchForm = `
 <form action="#" method="get">
@@ -17,6 +11,14 @@ const searchForm = `
 </form>`;
 
 
+
+// Inserting HTML Into DOM
+function addHTML(htmlElement, htmlToAdd){
+    htmlElement.insertAdjacentHTML('afterbegin', htmlToAdd)
+}
+
+// Adding Search Bar
+addHTML(searchContainer, searchForm);
 
 
 // Fetching the API
@@ -38,7 +40,7 @@ fetchData('https://randomuser.me/api/?results=12')
 
 //Gallery Markup
 function getUsers(data) { 
-    const html = data.results.map(person =>  
+    const html = data.results.map(person => 
         `<div class="card">
             <div class="card-img-container">
                 <img class="card-img" src="${person.picture.thumbnail}" alt="profile picture">
@@ -70,7 +72,7 @@ function generateHTML(data){
                 <hr>
                 <p class="modal-text">${person.cell}</p>
                 <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.country} ${person.location.state}, ${person.location.postcode}</p>
-                <p class="modal-text">Birthday: ${new Date(person.dob.date)}</p>
+                <p class="modal-text">Birthday: ${new Date(person.dob.date).toISOString().slice(0, 10)}</p>
         </div>
     </div>
     `)
@@ -107,16 +109,3 @@ function addHTMLToDOM(html){
 
 
 
-
-
-//----- Add Modal Info from API to HTML
-
-
-
-// Modal Window
-
-
-
-
-addHTML(searchContainer, searchForm);
-// addHTML(modal, modalHTML);
